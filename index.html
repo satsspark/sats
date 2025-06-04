@@ -1,0 +1,3355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LRC-20 SATS Token</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><rect width='64' height='64' rx='16' fill='black'/><text x='50%' y='54%' text-anchor='middle' dominant-baseline='middle' font-size='38' font-family='Arial, Inter, sans-serif' fill='white' font-weight='bold'>S</text></svg>">
+    <style>
+        /* 回退强制100vw，恢复桌面端最大宽度和居中，仅保留移动端适配和防溢出 */
+        html, body {
+            overflow-x: hidden !important;
+        }
+        * {
+            box-sizing: border-box !important;
+        }
+        @media (max-width: 900px) {
+            .container, .main-card, .web-wallet-card, .market-container, .market-table-wrap, .wallet-assets-card, .wallet-overview, .wallet-tabs {
+                max-width: 100vw !important;
+                width: 100vw !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: auto !important;
+            }
+            .market-table, .wallet-assets-table {
+                min-width: 600px !important;
+                width: 100% !important;
+            }
+            .code-block, pre {
+                word-break: break-all !important;
+                white-space: pre !important;
+                max-width: 100vw !important;
+                overflow-x: auto !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .container, .main-card, .web-wallet-card, .market-container, .market-table-wrap, .wallet-assets-card, .wallet-overview, .wallet-tabs {
+                max-width: 100vw !important;
+                width: 100vw !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: auto !important;
+            }
+            .market-table, .wallet-assets-table {
+                min-width: 600px !important;
+                width: 100% !important;
+            }
+            .code-block, pre {
+                word-break: break-all !important;
+                white-space: pre !important;
+                max-width: 100vw !important;
+                overflow-x: auto !important;
+            }
+        }
+
+        body {
+            background: #181a20;
+            font-family: 'Inter', Arial, sans-serif;
+            color: #e6eaf3;
+            margin: 0;
+            min-height: 100vh;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 32px auto 0 auto;
+            padding: 0 0 48px 0;
+        }
+        .main-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(28,34,48,0.98);
+            border-radius: 22px;
+            box-shadow: 0 8px 32px rgba(30,48,80,0.18), 0 1.5px 8px rgba(0,0,0,0.10);
+            padding: 36px 48px 40px 48px;
+            margin-top: 0;
+            transition: box-shadow 0.3s;
+        }
+        .main-card:hover {
+            box-shadow: 0 12px 40px rgba(30,48,80,0.22), 0 2px 12px rgba(0,0,0,0.13);
+        }
+        .top-warning, .top-info {
+            margin-bottom: 0;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .top-warning {
+            background: linear-gradient(90deg, #4b4a2a 60%, #6b5e2a 100%);
+            color: #ffe082;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .top-info {
+            background: linear-gradient(90deg, #1e3a36 60%, #2a4b6b 100%);
+            color: #7fffd4;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+        .follow-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0 0 0;
+        }
+        .follow-btn {
+            background: #23293a;
+            color: #b0b8c9;
+            border-radius: 8px;
+            padding: 8px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, color 0.2s;
+            box-shadow: 0 2px 8px rgba(90,209,255,0.10);
+        }
+        .follow-btn:hover {
+            background: #5ad1ff;
+            color: #181c26;
+        }
+        .main-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #5ad1ff;
+            margin-bottom: 6px;
+            margin-top: 0;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 8px rgba(90,209,255,0.08);
+        }
+        .subtitle {
+            font-size: 17px;
+            color: #b0b8c9;
+            margin-bottom: 22px;
+            font-weight: 400;
+        }
+        .progress-box {
+            background: #23293a;
+            border-radius: 12px;
+            padding: 18px 18px 14px 18px;
+            margin-bottom: 28px;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.10);
+            border: 1px solid #23293a;
+        }
+        .progress-label {
+            font-size: 15px;
+            color: #b0b8c9;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .progress-bar-bg {
+            background: #181c26;
+            border-radius: 8px;
+            height: 24px;
+            position: relative;
+            margin-bottom: 8px;
+            overflow: hidden;
+            border: 1px solid #23293a;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #5ad1ff 0%, #1e90ff 100%);
+            height: 0%;
+            width: 0%;
+            border-radius: 8px;
+            position: absolute;
+            left: 0; top: 0;
+            z-index: 1;
+            box-shadow: 0 1px 8px rgba(90,209,255,0.10);
+        }
+        .progress-bar-text {
+            position: absolute;
+            right: 16px;
+            top: 2px;
+            font-size: 16px;
+            color: #fff;
+            font-weight: bold;
+            z-index: 2;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.18);
+        }
+        .progress-tip {
+            font-size: 13px;
+            color: #b0b8c9;
+            margin-top: 2px;
+        }
+        .step-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 32px;
+            background: rgba(35,41,58,0.92);
+            border-radius: 14px;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.08);
+            padding: 18px 18px 12px 18px;
+            transition: box-shadow 0.2s, background 0.2s;
+        }
+        .step-item:hover {
+            background: #23293a;
+            box-shadow: 0 4px 16px rgba(90,209,255,0.08);
+        }
+        .step-num {
+            min-width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #5ad1ff 0%, #1e90ff 100%);
+            color: #fff;
+            font-weight: bold;
+            font-size: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 18px;
+            margin-top: 2px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+            border: 2px solid #23293a;
+        }
+        .step-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .step-title {
+            font-size: 19px;
+            font-weight: bold;
+            color: #5ad1ff;
+            margin-bottom: 4px;
+            letter-spacing: 0.1px;
+        }
+        .step-desc {
+            font-size: 15px;
+            color: #b0b8c9;
+            margin-bottom: 6px;
+        }
+        .code-block {
+            background: #181c26;
+            color: #b6e388;
+            border-radius: 10px;
+            padding: 16px 22px;
+            font-size: 17px;
+            margin-bottom: 6px;
+            margin-top: 6px;
+            font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+            white-space: pre !important;
+            line-height: 2.0;
+            font-weight: 500;
+            border: 1px solid #23293a;
+            overflow-x: auto !important;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.10);
+            transition: border 0.2s;
+        }
+        .code-block:hover {
+            border: 1.5px solid #5ad1ff;
+        }
+        .code-block::-webkit-scrollbar {
+            height: 8px;
+            background: #23293a;
+            border-radius: 8px;
+        }
+        .code-block::-webkit-scrollbar-thumb {
+            background: #333b4d;
+            border-radius: 8px;
+        }
+        .alert {
+            background: linear-gradient(90deg, #4b4a2a 60%, #6b5e2a 100%);
+            color: #ffe082;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 14px;
+            margin-bottom: 6px;
+            font-weight: 500;
+            border: 1px solid #4b4a2a;
+        }
+        .alert.info {
+            background: linear-gradient(90deg, #1e3a36 60%, #2a4b6b 100%);
+            color: #7fffd4;
+            border: 1px solid #1e3a36;
+        }
+        .web-wallet-card {
+            max-width: 520px;
+            margin: 0 auto 36px auto;
+            background: linear-gradient(135deg, #23293a 80%, #2e3e5c 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(90,209,255,0.10), 0 1px 8px rgba(0,0,0,0.10);
+            padding: 28px 28px 20px 28px;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            border: 2.5px solid #5ad1ff;
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.2s, border 0.2s;
+            width: 100%;
+            max-width: none;
+            box-sizing: border-box;
+        }
+        .web-wallet-card:hover {
+            box-shadow: 0 8px 32px rgba(90,209,255,0.18);
+            border: 2.5px solid #1e90ff;
+        }
+        .web-wallet-icon {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #5ad1ff 60%, #1e90ff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 22px;
+            margin-top: 2px;
+            box-shadow: 0 2px 8px rgba(90,209,255,0.10);
+        }
+        .web-wallet-icon svg {
+            width: 28px;
+            height: 28px;
+            color: #fff;
+        }
+        .web-wallet-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .web-wallet-title {
+            color: #5ad1ff;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+        }
+        .web-wallet-desc {
+            color: #b0b8c9;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+        .web-wallet-list {
+            color: #e6eaf3;
+            font-size: 15px;
+            margin: 0 0 0 18px;
+            padding: 0;
+        }
+        .web-wallet-list li {
+            margin-bottom: 4px;
+        }
+        .web-wallet-btn {
+            display: inline-block;
+            margin-top: 24px;
+            background: linear-gradient(90deg, #5ad1ff 0%, #1e90ff 100%);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(90,209,255,0.18), 0 1px 8px rgba(0,0,0,0.10);
+            letter-spacing: 0.5px;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+            text-align: center;
+        }
+        .web-wallet-btn:hover {
+            background: linear-gradient(90deg, #1e90ff 0%, #5ad1ff 100%);
+            color: #181c26;
+            box-shadow: 0 8px 32px rgba(90,209,255,0.22);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .important-updates {
+            margin-top: 40px;
+            background: linear-gradient(180deg, #181c26 60%, #23293a 100%);
+            border-radius: 16px;
+            padding: 24px 20px 16px 20px;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.10);
+            border: 1px solid #23293a;
+        }
+        .important-title {
+            color: #ff5a5a;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+            text-shadow: 0 2px 8px rgba(255,90,90,0.08);
+        }
+        .important-desc {
+            color: #b0b8c9;
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+        .update-block {
+            background: #23293a;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            border: 1px solid #23293a;
+            transition: border 0.2s;
+        }
+        .update-block:hover {
+            border: 1.5px solid #5ad1ff;
+        }
+        .update-title {
+            color: #ffb86c;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .update-desc {
+            color: #e6eaf3;
+            font-size: 15px;
+        }
+        .divider {
+            border: none;
+            border-top: 1px solid #23293a;
+            margin: 24px 0 24px 0;
+        }
+        a {
+            color: #5ad1ff;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+        a:hover {
+            color: #1e90ff;
+        }
+        @media (max-width: 900px) {
+            .container, .main-card, .wallet-overview, .wallet-tabs, .wallet-assets-card {
+                max-width: 100vw !important;
+                width: 100vw !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            .market-container, .market-table-wrap, .wallet-assets-card {
+                overflow-x: auto !important;
+                width: 100vw !important;
+            }
+            .market-table, .wallet-assets-table {
+                min-width: 600px !important;
+                width: 100% !important;
+            }
+            .main-card {
+                padding: 18px 2vw 24px 2vw;
+            }
+            .step-item {
+                flex-direction: column;
+                padding: 14px 8px 10px 8px;
+            }
+            .web-wallet-card {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 18px 10px 12px 10px;
+            }
+            .web-wallet-icon {
+                margin-bottom: 12px;
+                margin-right: 0;
+            }
+            .important-updates {
+                padding: 14px 6px 10px 6px;
+            }
+            .web-wallet-btn {
+                width: 100%;
+                font-size: 18px;
+                padding: 14px 0;
+            }
+            .follow-row {
+                margin: 32px 0 0 0;
+            }
+            .main-title {
+                font-size: 24px;
+            }
+            .subtitle {
+                font-size: 15px;
+            }
+            .step-title {
+                font-size: 17px;
+            }
+            .step-desc {
+                font-size: 14px;
+            }
+            .code-block {
+                font-size: 14px;
+                padding: 12px 16px;
+            }
+            .alert {
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+            .progress-box {
+                padding: 14px 14px 10px 14px;
+            }
+            .progress-label {
+                font-size: 14px;
+            }
+            .progress-bar-bg {
+                height: 20px;
+            }
+            .progress-bar-text {
+                font-size: 14px;
+            }
+            .progress-tip {
+                font-size: 12px;
+            }
+        }
+        @media (max-width: 480px) {
+            .container, .main-card, .wallet-overview, .wallet-tabs, .wallet-assets-card {
+                max-width: 100vw !important;
+                width: 100vw !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            .market-container, .market-table-wrap, .wallet-assets-card {
+                overflow-x: auto !important;
+                width: 100vw !important;
+            }
+            .market-table, .wallet-assets-table {
+                min-width: 600px !important;
+                width: 100% !important;
+            }
+            .main-card {
+                padding: 16px 4vw 20px 4vw;
+                border-radius: 16px;
+            }
+            .main-title {
+                font-size: 22px;
+            }
+            .subtitle {
+                font-size: 14px;
+                margin-bottom: 16px;
+            }
+            .step-item {
+                padding: 12px 6px 8px 6px;
+                margin-bottom: 20px;
+            }
+            .step-num {
+                width: 32px;
+                height: 32px;
+                font-size: 18px;
+                margin-right: 12px;
+            }
+            .step-title {
+                font-size: 16px;
+            }
+            .step-desc {
+                font-size: 13px;
+            }
+            .code-block {
+                font-size: 13px;
+                padding: 10px 12px;
+                line-height: 1.6;
+            }
+            .alert {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+            .web-wallet-card {
+                padding: 16px 8px 10px 8px;
+            }
+            .web-wallet-title {
+                font-size: 18px;
+            }
+            .web-wallet-desc {
+                font-size: 14px;
+            }
+            .web-wallet-list {
+                font-size: 13px;
+            }
+            .important-updates {
+                padding: 12px 4px 8px 4px;
+            }
+            .important-title {
+                font-size: 18px;
+            }
+            .important-desc {
+                font-size: 13px;
+            }
+            .update-block {
+                padding: 10px 12px;
+            }
+            .update-title {
+                font-size: 14px;
+            }
+            .update-desc {
+                font-size: 13px;
+            }
+            .follow-btn {
+                font-size: 15px;
+                padding: 10px 20px;
+            }
+            .progress-box {
+                padding: 12px 12px 8px 12px;
+            }
+            .progress-label {
+                font-size: 13px;
+            }
+            .progress-bar-bg {
+                height: 18px;
+            }
+            .progress-bar-text {
+                font-size: 13px;
+            }
+            .progress-tip {
+                font-size: 11px;
+            }
+        }
+        /* 导航栏移动端适配 */
+        @media (max-width: 900px) {
+            .main-nav {
+                padding: 0 16px;
+                height: auto;
+                flex-direction: column;
+            }
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+                padding: 12px 0;
+            }
+            .nav-link {
+                font-size: 15px;
+                padding: 6px 12px;
+            }
+        }
+        @media (max-width: 480px) {
+            .main-nav {
+                padding: 0 12px;
+            }
+            .nav-links {
+                padding: 8px 0;
+            }
+            .nav-link {
+                font-size: 14px;
+                padding: 6px 8px;
+            }
+        }
+        /* 市场页面移动端适配 */
+        @media (max-width: 900px) {
+            .market-container {
+                padding: 0 8px 32px 8px;
+            }
+            .market-header h2 {
+                font-size: 24px;
+            }
+            .market-desc {
+                font-size: 14px;
+            }
+            .market-table th, .market-table td {
+                font-size: 13px;
+                padding: 10px 6px;
+            }
+            .token-logo {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+            .token-name {
+                font-size: 14px;
+            }
+            .token-symbol {
+                font-size: 12px;
+            }
+            .trade-btn {
+                font-size: 13px;
+                padding: 6px 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            .market-container {
+                padding: 0 4px 24px 4px;
+            }
+            .market-header h2 {
+                font-size: 20px;
+            }
+            .market-desc {
+                font-size: 13px;
+            }
+            .market-table th, .market-table td {
+                font-size: 12px;
+                padding: 8px 4px;
+            }
+            .token-logo {
+                width: 24px;
+                height: 24px;
+                font-size: 12px;
+            }
+            .token-name {
+                font-size: 13px;
+            }
+            .token-symbol {
+                font-size: 11px;
+            }
+            .trade-btn {
+                font-size: 12px;
+                padding: 5px 12px;
+            }
+        }
+        /* 钱包页面移动端适配 */
+        @media (max-width: 900px) {
+            .wallet-overview {
+                flex-direction: column;
+                gap: 16px;
+                padding: 0 16px;
+            }
+            .wallet-tabs {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 0 16px;
+            }
+            .wallet-tab {
+                font-size: 15px;
+                padding: 8px 16px;
+            }
+            .wallet-assets-card {
+                margin: 16px 16px 0 16px;
+            }
+            .wallet-assets-table th, .wallet-assets-table td {
+                font-size: 14px;
+                padding: 12px 8px;
+            }
+            .wallet-token-logo {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+            .wallet-token-name {
+                font-size: 15px;
+            }
+            .wallet-ops-btn {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+        }
+        @media (max-width: 480px) {
+            .wallet-overview {
+                padding: 0 12px;
+            }
+            .wallet-tabs {
+                padding: 0 12px;
+            }
+            .wallet-tab {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+            .wallet-assets-card {
+                margin: 12px 12px 0 12px;
+            }
+            .wallet-assets-table th, .wallet-assets-table td {
+                font-size: 12px;
+                padding: 8px 6px;
+            }
+            .wallet-token-logo {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+            .wallet-token-name {
+                font-size: 13px;
+            }
+            .wallet-ops-btn {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+        }
+        .main-card, .web-wallet-card {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .main-nav {
+            width: 100%;
+            background: #181a20;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            height: 56px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-sizing: border-box;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        .wallet-btn {
+            margin-left: 32px;
+            min-width: 140px;
+            padding: 8px 0;
+        }
+        @media (max-width: 900px) {
+            .main-nav { flex-direction: column; height: auto; padding: 0 8px; }
+            .nav-right { margin-left: 0; margin-top: 8px; }
+            .wallet-btn { min-width: 100px; padding: 8px 0; margin-left: 0; }
+        }
+        .nav-logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #5ad1ff;
+            letter-spacing: 1px;
+            margin-right: 32px;
+            display: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+        .nav-link {
+            color: #b5b7c0;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 6px 18px;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .nav-link.active, .nav-link:hover {
+            background: #23262f;
+            color: #fff;
+        }
+        .market-container {
+            max-width: 900px;
+            margin: 40px auto 0 auto;
+            padding: 0 12px 40px 12px;
+        }
+        .market-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #5ad1ff;
+            margin-bottom: 6px;
+        }
+        .market-desc {
+            color: #b0b8c9;
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+        .market-filters {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+        .market-tabs {
+            display: flex;
+            gap: 8px;
+        }
+        .market-tab {
+            background: #23293a;
+            color: #b0b8c9;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 22px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .market-tab.active, .market-tab:hover {
+            background: #5ad1ff;
+            color: #181c26;
+        }
+        .market-search {
+            background: #181c26;
+            color: #e6eaf3;
+            border: 1.5px solid #23293a;
+            border-radius: 8px;
+            padding: 7px 16px;
+            font-size: 15px;
+            outline: none;
+            width: 180px;
+            transition: border 0.2s;
+        }
+        .market-search:focus {
+            border: 1.5px solid #5ad1ff;
+        }
+        .market-sort {
+            background: #23293a;
+            color: #b0b8c9;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 16px;
+            font-size: 15px;
+            font-weight: 700;
+            outline: none;
+        }
+        .market-list {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .market-card {
+            background: linear-gradient(135deg, #23293a 80%, #2e3e5c 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(90,209,255,0.10), 0 1px 8px rgba(0,0,0,0.10);
+            padding: 24px 20px 18px 20px;
+            min-width: 220px;
+            max-width: 260px;
+            flex: 1 1 240px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            border: 2px solid #23293a;
+            transition: box-shadow 0.2s, border 0.2s, transform 0.1s;
+            position: relative;
+        }
+        .market-card:hover {
+            border: 2px solid #5ad1ff;
+            box-shadow: 0 8px 32px rgba(90,209,255,0.18);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .market-token-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 900;
+            color: #181c26;
+            box-shadow: 0 2px 8px rgba(90,209,255,0.10);
+            margin-bottom: 6px;
+        }
+        .market-token-name {
+            font-size: 18px;
+            font-weight: 800;
+            color: #e6eaf3;
+            margin-bottom: 2px;
+        }
+        .market-token-symbol {
+            font-size: 13px;
+            color: #b0b8c9;
+            margin-bottom: 6px;
+        }
+        .market-token-price {
+            font-size: 15px;
+            color: #b0b8c9;
+            margin-bottom: 2px;
+        }
+        .market-token-price span {
+            color: #5ad1ff;
+            font-weight: 700;
+        }
+        .market-token-volume {
+            font-size: 13px;
+            color: #b0b8c9;
+            margin-bottom: 2px;
+        }
+        .market-token-change {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .market-token-change.up {
+            color: #4be388;
+        }
+        .market-token-change.down {
+            color: #ff5a5a;
+        }
+        .market-btn {
+            background: linear-gradient(90deg, #5ad1ff 0%, #1e90ff 100%);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(90,209,255,0.10);
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+            margin-top: 6px;
+        }
+        .market-btn:hover {
+            background: linear-gradient(90deg, #1e90ff 0%, #5ad1ff 100%);
+            color: #181c26;
+            box-shadow: 0 8px 32px rgba(90,209,255,0.22);
+            transform: translateY(-2px) scale(1.03);
+        }
+        @media (max-width: 900px) {
+            .market-list {
+                flex-direction: column;
+                gap: 18px;
+            }
+            .market-card {
+                min-width: unset;
+                max-width: unset;
+                width: 100%;
+            }
+        }
+        .back-to-market {
+            background: none;
+            color: #5ad1ff;
+            border: none;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 18px;
+            margin-right: 18px;
+            transition: color 0.2s;
+        }
+        .back-to-market:hover {
+            color: #1e90ff;
+            text-decoration: underline;
+        }
+        .market-detail-content {
+            background: linear-gradient(135deg, #23293a 80%, #2e3e5c 100%);
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(90,209,255,0.10), 0 1px 8px rgba(0,0,0,0.10);
+            padding: 36px 32px 28px 32px;
+            max-width: 420px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+        .market-detail-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 900;
+            color: #181c26;
+            box-shadow: 0 2px 8px rgba(90,209,255,0.10);
+            margin-bottom: 8px;
+        }
+        .market-detail-name {
+            font-size: 26px;
+            font-weight: 800;
+            color: #e6eaf3;
+            margin-bottom: 2px;
+        }
+        .market-detail-symbol {
+            font-size: 15px;
+            color: #b0b8c9;
+            margin-bottom: 8px;
+        }
+        .market-detail-desc {
+            font-size: 16px;
+            color: #b0b8c9;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .market-detail-price {
+            font-size: 18px;
+            color: #b0b8c9;
+            margin-bottom: 2px;
+        }
+        .market-detail-price span {
+            color: #5ad1ff;
+            font-weight: 700;
+        }
+        .market-detail-volume {
+            font-size: 15px;
+            color: #b0b8c9;
+            margin-bottom: 2px;
+        }
+        .market-detail-change {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .market-detail-change.up {
+            color: #4be388;
+        }
+        .market-detail-change.down {
+            color: #ff5a5a;
+        }
+        .market-detail-btn {
+            background: linear-gradient(90deg, #5ad1ff 0%, #1e90ff 100%);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 800;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 48px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(90,209,255,0.18), 0 1px 8px rgba(0,0,0,0.10);
+            letter-spacing: 0.5px;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+            text-align: center;
+        }
+        .market-detail-btn:hover {
+            background: linear-gradient(90deg, #1e90ff 0%, #5ad1ff 100%);
+            color: #181c26;
+            box-shadow: 0 8px 32px rgba(90,209,255,0.22);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .market-token-desc {
+            font-size: 14px;
+            color: #b0b8c9;
+            margin-bottom: 0;
+        }
+        .market-filters, .market-tabs, .market-search, .market-sort { display: none !important; }
+        .arrow-btn {
+            background: #23293a;
+            color: #5ad1ff;
+            border: none;
+            border-radius: 8px;
+            font-size: 22px;
+            font-weight: 900;
+            width: 38px;
+            height: 38px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .arrow-btn:hover {
+            background: #5ad1ff;
+            color: #181c26;
+        }
+        #kline-container { background: #181c26; border-radius: 10px; box-shadow: 0 2px 8px rgba(90,209,255,0.10); }
+        .market-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            background: #23293a;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(90,209,255,0.08);
+            margin-top: 18px;
+            padding: 0 0 8px 0;
+            box-sizing: border-box;
+        }
+        .market-table {
+            width: 100%;
+            min-width: 600px !important;
+            max-width: 100vw;
+            box-sizing: border-box;
+        }
+        .market-table th, .market-table td {
+            padding: 16px 12px;
+            font-size: 16px;
+            border-bottom: 1px solid #23293a;
+        }
+        .market-table th {
+            color: #5ad1ff;
+            font-weight: 800;
+            background: #181c26;
+            text-align: right;
+        }
+        .market-table th:first-child, .market-table td:first-child {
+            text-align: left;
+        }
+        .market-table td {
+            color: #e6eaf3;
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+        }
+        .market-table .token-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            text-align: left;
+        }
+        .market-table .token-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: #181c26;
+            box-shadow: 0 1px 4px rgba(90,209,255,0.10);
+            background: #5ad1ff;
+        }
+        .market-table .token-name {
+            color: #e6eaf3;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .market-table .token-symbol {
+            color: #b0b8c9;
+            font-size: 13px;
+            margin-left: 2px;
+        }
+        .market-table .change-up { color: #4be388; font-weight: 700; }
+        .market-table .change-down { color: #ff5a5a; font-weight: 700; }
+        .market-table .trade-btn {
+            background: linear-gradient(90deg, #5ad1ff 0%, #1e90ff 100%);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 28px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(90,209,255,0.10);
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+        }
+        .market-table .trade-btn:hover {
+            background: linear-gradient(90deg, #1e90ff 0%, #5ad1ff 100%);
+            color: #181c26;
+            box-shadow: 0 8px 32px rgba(90,209,255,0.22);
+            transform: translateY(-2px) scale(1.03);
+        }
+        @media (max-width: 900px) {
+            .market-table-wrap { border-radius: 10px; }
+            .market-table { min-width: unset; width: 100%; }
+            .market-table th, .market-table td { font-size: 14px; padding: 10px 6px; }
+        }
+        .trade-layout { max-width: 1200px; }
+        .trade-header { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
+        .trade-token-info { display: flex; align-items: center; gap: 12px; }
+        .trade-token-logo { width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: #181c26; box-shadow: 0 1px 4px rgba(90,209,255,0.10); background: #5ad1ff; }
+        .trade-token-name { color: #e6eaf3; font-size: 18px; font-weight: 700; }
+        .trade-token-symbol { color: #b0b8c9; font-size: 13px; }
+        .trade-token-price { color: #5ad1ff; font-size: 18px; font-weight: 800; margin-left: 8px; }
+        .trade-token-change { font-size: 15px; font-weight: 700; margin-left: 8px; }
+        .trade-token-change.up { color: #4be388; }
+        .trade-token-change.down { color: #ff5a5a; }
+        .trade-main {
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+            min-height: 420px;
+            padding: 0 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .trade-left {
+            flex: 1.1;
+            min-width: 0;
+            background: #23293a;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(90,209,255,0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: stretch;
+            padding: 0 0 12px 0;
+        }
+        .orderbook-header {
+            background: #181c26;
+            color: #5ad1ff;
+            font-size: 20px;
+            font-weight: 900;
+            text-align: center;
+            padding: 12px 0 8px 0;
+            border-radius: 14px 14px 0 0;
+            margin-bottom: 0;
+        }
+        .orderbook-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+            background: transparent;
+        }
+        .orderbook-table th, .orderbook-table td {
+            padding: 4px 6px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+        .orderbook-table th {
+            color: #7fffd4;
+            font-weight: 700;
+            background: #23293a;
+            border-bottom: 1px solid #23293a;
+            font-size: 15px;
+        }
+        .orderbook-table tr {
+            transition: background 0.18s;
+        }
+        .orderbook-table tr:hover {
+            background: #1e2336;
+        }
+        .orderbook-table .ob-price-up { color: #4be388; font-weight: 700; }
+        .orderbook-table .ob-price-down { color: #ff5a5a; font-weight: 700; }
+        .orderbook-table .ob-amount { color: #e6eaf3; }
+        .orderbook-table .ob-total { color: #b0b8c9; }
+        .orderbook-last {
+            background: #181c26;
+            color: #5ad1ff;
+            font-size: 18px;
+            font-weight: 800;
+            text-align: center;
+            padding: 8px 0;
+            border-radius: 0 0 10px 10px;
+            margin: 0 8px 8px 8px;
+        }
+        .trade-center {
+            flex: 1;
+            min-width: 0;
+            background: #23293a;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(90,209,255,0.08);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: stretch;
+        }
+        .trade-kline-title {
+            color: #5ad1ff;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .trade-kline-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: #5ad1ff;
+            border-radius: 2px;
+        }
+        .trade-kline {
+            width: 100%;
+            height: 360px;
+            background: #181c26;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            border: 1px solid #23293a;
+        }
+        .trade-right {
+            flex: 1;
+            min-width: 0;
+            background: #23293a;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(90,209,255,0.08);
+            padding: 18px 8px 12px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+        }
+        .trade-trades-title {
+            color: #5ad1ff;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .trade-trades-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            background: transparent;
+        }
+        .trade-trades-table th, .trade-trades-table td {
+            padding: 4px 6px;
+            text-align: right;
+            font-size: 14px;
+            font-variant-numeric: tabular-nums;
+        }
+        .trade-trades-table th {
+            color: #7fffd4;
+            font-weight: 700;
+            background: #23293a;
+            border-bottom: 1px solid #23293a;
+        }
+        .trade-trades-table tr {
+            transition: background 0.18s;
+        }
+        .trade-trades-table tr:hover {
+            background: #1e2336;
+        }
+        .trade-trades-table .trade-buy { color: #4be388; font-weight: 700; }
+        .trade-trades-table .trade-sell { color: #ff5a5a; font-weight: 700; }
+        .trade-bottom {
+            width: 100%;
+            margin: 24px auto 0 auto;
+            background: #23293a;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(90,209,255,0.08);
+            padding: 24px 0 18px 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 32px;
+        }
+        .trade-type-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .trade-type-tab {
+            flex: 1;
+            background: #181c26;
+            color: #b0b8c9;
+            border: 1px solid #23293a;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .trade-type-tab.active {
+            background: #5ad1ff;
+            color: #181c26;
+            border-color: #5ad1ff;
+        }
+        .trade-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            background: #181c26;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #23293a;
+        }
+        .trade-form-row {
+            display: flex;
+            gap: 24px;
+        }
+        .trade-form-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 0;
+        }
+        .trade-form-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .trade-form label {
+            color: #b0b8c9;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+        .trade-form .balance {
+            color: #5ad1ff;
+            font-size: 13px;
+            font-weight: 600;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+        .trade-form input {
+            background: #23293a;
+            color: #e6eaf3;
+            border: 1.5px solid #23293a;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .trade-form input:focus {
+            border: 1.5px solid #5ad1ff;
+            box-shadow: 0 0 0 2px rgba(90,209,255,0.1);
+        }
+        .trade-form-tip {
+            color: #b0b8c9;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: -8px;
+        }
+        .trade-form-btn {
+            font-size: 18px;
+            font-weight: 800;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 0;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(90,209,255,0.10);
+            transition: all 0.2s;
+            letter-spacing: 1px;
+            width: 100%;
+        }
+        .trade-form-btn.buy {
+            background: linear-gradient(90deg, #4be388 0%, #5ad1ff 100%);
+            color: #181c26;
+        }
+        .trade-form-btn.sell {
+            background: linear-gradient(90deg, #ff5a5a 0%, #ffb86c 100%);
+            color: #181c26;
+        }
+        .trade-form-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(90,209,255,0.20);
+        }
+        .trade-form-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        @media (max-width: 900px) {
+            .trade-form-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .trade-form {
+                padding: 20px;
+            }
+        }
+        .market-ticker-bar {
+            width: 100%;
+            background: #181c26;
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            padding: 0 32px;
+            height: 56px;
+            font-size: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(90,209,255,0.08);
+            margin: 0 auto 24px auto;
+            max-width: 800px;
+        }
+        .ticker-price {
+            font-size: 26px;
+            font-weight: 900;
+            color: #4be388;
+            min-width: 180px;
+        }
+        .ticker-price.down { color: #ff5a5a; }
+        .ticker-label { 
+            color: #b0b8c9; 
+            min-width: 80px;
+        }
+        .ticker-value { 
+            color: #e6eaf3; 
+            font-weight: 700;
+            min-width: 120px;
+        }
+        .ticker-change.up { color: #4be388; font-weight: 700; }
+        .ticker-change.down { color: #ff5a5a; font-weight: 700; }
+        .ticker-token { 
+            color: #5ad1ff;
+            font-size: 18px;
+            font-weight: 700;
+            margin-left: auto;
+            padding-left: 24px;
+            border-left: 1px solid #23293a;
+        }
+        .trade-layout-pro {
+            display: flex;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 32px auto 0 auto;
+            align-items: stretch;
+            min-height: 600px;
+        }
+        .orderbook-card, .trade-center-pro, .trade-ticker-card {
+            background: #23293a;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(90,209,255,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            min-height: 100%;
+            padding: 28px 18px 24px 18px;
+        }
+        .orderbook-card {
+            width: 260px;
+            min-width: 220px;
+            padding-right: 12px;
+        }
+        .trade-center-pro {
+            flex: 1.2;
+            min-width: 0;
+            padding: 28px 18px 24px 18px;
+        }
+        .trade-ticker-card {
+            width: 220px;
+            min-width: 180px;
+            padding-left: 12px;
+        }
+        .orderbook-title, .trade-ticker-title, .trade-kline-title {
+            color: #5ad1ff;
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        .trade-form-btn {
+            font-size: 22px;
+            font-weight: 900;
+            border: none;
+            border-radius: 12px;
+            padding: 20px 0;
+            cursor: pointer;
+            box-shadow: 0 4px 24px rgba(90,209,255,0.18), 0 1px 8px rgba(0,0,0,0.10);
+            transition: all 0.2s;
+            letter-spacing: 1px;
+            width: 100%;
+            margin-top: 18px;
+            margin-bottom: 6px;
+        }
+        .trade-form-btn.buy {
+            background: linear-gradient(90deg, #4be388 0%, #5ad1ff 100%);
+            color: #181c26;
+            box-shadow: 0 0 16px 0 #4be38844;
+        }
+        .trade-form-btn.sell {
+            background: linear-gradient(90deg, #ff5a5a 0%, #ffb86c 100%);
+            color: #181c26;
+            box-shadow: 0 0 16px 0 #ff5a5a44;
+        }
+        .trade-form-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 32px rgba(90,209,255,0.22);
+            filter: brightness(1.08);
+        }
+        @media (max-width: 1200px) {
+            .trade-layout-pro { flex-direction: column; gap: 18px; min-height: unset; }
+            .orderbook-card, .trade-ticker-card, .trade-center-pro { width: 100%; min-width: 0; padding: 18px 8px 16px 8px; }
+        }
+        /* OKX风格三栏交易页 */
+        .trade-layout-okx {
+            display: flex;
+            gap: 16px;
+            max-width: 1200px;
+            margin: 24px auto 0 auto;
+            align-items: stretch;
+            min-height: 520px;
+        }
+        .okx-orderbook, .okx-center, .okx-trades {
+            background: #23262f;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(90,209,255,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            min-height: 100%;
+            padding: 16px 8px 12px 8px;
+        }
+        .okx-orderbook {
+            width: 240px;
+            min-width: 180px;
+        }
+        .okx-center {
+            flex: 1.5;
+            min-width: 0;
+            padding: 16px 8px 12px 8px;
+        }
+        .okx-trades {
+            width: 180px;
+            min-width: 120px;
+        }
+        .okx-section-title {
+            font-size: 22px;
+            color: #b5b7c0;
+            font-weight: 700;
+            padding: 18px 18px 10px 18px;
+            border-bottom: 1px solid #23262f;
+            background: #181a20;
+            margin: 0;
+        }
+        .okx-orderbook-table3 {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: transparent;
+        }
+        .okx-orderbook-table3 th, .okx-orderbook-table3 td {
+            padding: 4px 4px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            border: none;
+        }
+        .okx-orderbook-table3 th {
+            color: #b5b7c0;
+            font-weight: 600;
+            background: #181a20;
+            font-size: 16px;
+            border-bottom: 1px solid #23262f;
+        }
+        .okx-orderbook-table3 tr:hover { background: #23293a; }
+        .okx-orderbook-table3 .ob-price-up { color: #00c076; font-weight: 700; text-align: left; }
+        .okx-orderbook-table3 .ob-price-down { color: #ff554a; font-weight: 700; text-align: right; }
+        .okx-orderbook-table3 .ob-amount, .okx-orderbook-table3 .ob-total { color: #b0b8c9; }
+        .okx-orderbook-table3 .last-row td {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+            background: #181a20;
+            padding: 6px 0;
+        }
+        .okx-kline-bar {
+            padding: 8px 8px 0 8px;
+        }
+        .okx-kline-title {
+            font-size: 13px;
+        }
+        .okx-kline-period-btn {
+            font-size: 12px;
+            padding: 2px 6px;
+        }
+        #kline-container {
+            height: 220px;
+        }
+        .okx-trade-form-bar {
+            padding: 0 0 0 0;
+        }
+        .okx-trade-form-wrap {
+            padding: 8px 8px 0 8px;
+        }
+        .okx-trade-input {
+            font-size: 15px;
+            padding: 10px 10px;
+            border-radius: 4px;
+        }
+        .okx-trade-percent-btn {
+            font-size: 14px;
+            padding: 8px 0;
+            border-radius: 4px;
+        }
+        .okx-trade-btn {
+            font-size: 16px;
+            border-radius: 4px;
+            padding: 12px 0;
+        }
+        .okx-trade-item {
+            font-size: 12px;
+            padding: 2px 4px;
+        }
+        .okx-trade-item.buy { color: #00c076; }
+        .okx-trade-item.sell { color: #ff554a; }
+        .okx-trade-item .tt-side {
+            min-width: 36px;
+            text-align: left;
+            font-weight: 700;
+        }
+        .okx-trade-item .tt-price { min-width: 80px; text-align: right; font-weight: 700; }
+        .okx-trade-item .tt-qty { min-width: 60px; text-align: right; color: #e6eaf3; }
+        .okx-trade-item .tt-time { color: #b0b8c9; font-size: 12px; min-width: 48px; text-align: right; }
+        @media (max-width: 900px) {
+            .trade-layout-okx { flex-direction: column; min-height: unset; gap: 8px; }
+            .okx-orderbook, .okx-center, .okx-trades { width: 100%; min-width: 0; padding: 8px 2px 8px 2px; }
+            .binance-ticker-bar { flex-direction: column; align-items: flex-start; padding: 8px 8px; gap: 8px; }
+            .binance-main-price { font-size: 16px; }
+            .binance-symbol { font-size: 13px; }
+            .okx-orderbook-table3 th, .okx-orderbook-table3 td { font-size: 12px; }
+            #kline-container { height: 120px; }
+        }
+        .okx-orderbook-bids, .okx-orderbook-asks {
+            display: block;
+        }
+        .okx-orderbook-bids tr, .okx-orderbook-asks tr {
+            transition: background 0.18s;
+        }
+        .okx-orderbook-bids tr:hover, .okx-orderbook-asks tr:hover {
+            background: #23293a;
+        }
+        .okx-orderbook-bids .ob-price-up { color: #00c076; font-weight: 700; }
+        .okx-orderbook-asks .ob-price-down { color: #ff554a; font-weight: 700; }
+        .okx-orderbook-bids .ob-amount, .okx-orderbook-asks .ob-amount { color: #e6eaf3; }
+        .okx-orderbook-bids .ob-total, .okx-orderbook-asks .ob-total { color: #b0b8c9; }
+        /* 订单簿买卖左右分布，Last价格居中 */
+        .okx-orderbook-flex {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 0;
+            width: 100%;
+            margin-bottom: 0;
+        }
+        .okx-orderbook-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .okx-orderbook-col table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .okx-orderbook-last-center {
+            width: 120px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+            background: #181a20;
+            margin: 0 8px 0 8px;
+            padding: 8px 0 8px 0;
+            border-radius: 6px;
+            border: 1px solid #23262f;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            align-self: flex-end;
+        }
+        /* 顶部行情栏专业化 */
+        .okx-ticker-bar {
+            display: flex;
+            align-items: flex-end;
+            gap: 32px;
+            background: #181a20;
+            border-bottom: 1.5px solid #23262f;
+            padding: 22px 48px 12px 48px;
+            min-height: 80px;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .okx-ticker-main {
+            display: flex;
+            align-items: flex-end;
+            gap: 18px;
+        }
+        .okx-ticker-price {
+            font-size: 38px;
+            font-weight: 900;
+            color: #00c076;
+            margin-right: 8px;
+            line-height: 1;
+        }
+        .okx-ticker-price.down { color: #ff554a; }
+        .okx-ticker-symbol {
+            font-size: 22px;
+            color: #b5b7c0;
+            font-weight: 700;
+            margin-right: 18px;
+        }
+        .okx-ticker-divider {
+            width: 1px;
+            height: 32px;
+            background: #23262f;
+            margin: 0 18px;
+        }
+        .okx-ticker-info {
+            display: flex;
+            align-items: flex-end;
+            gap: 18px;
+        }
+        .okx-ticker-label {
+            color: #b5b7c0;
+            font-size: 15px;
+            margin-right: 4px;
+        }
+        .okx-ticker-value {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+        .okx-ticker-change.up { color: #00c076; font-weight: 700; }
+        .okx-ticker-change.down { color: #ff554a; font-weight: 700; }
+        @media (max-width: 900px) {
+            .okx-ticker-bar { flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 8px 8px 8px; }
+            .okx-ticker-main { gap: 8px; }
+            .okx-ticker-price { font-size: 22px; }
+            .okx-ticker-symbol { font-size: 15px; margin-right: 8px; }
+            .okx-ticker-label, .okx-ticker-value { font-size: 13px; }
+            .okx-ticker-divider { height: 18px; margin: 0 8px; }
+        }
+        .okx-orderbook-table3 {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 18px;
+            background: transparent;
+            table-layout: fixed;
+        }
+        .okx-orderbook-table3 th, .okx-orderbook-table3 td {
+            padding: 6px 12px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            border: none;
+            width: 33.33%;
+        }
+        .okx-orderbook-table3 th {
+            color: #b5b7c0;
+            font-weight: 600;
+            background: #181a20;
+            font-size: 16px;
+            border-bottom: 1px solid #23262f;
+            text-align: center;
+        }
+        .okx-orderbook-table3 tr:hover { background: #23293a; }
+        .okx-orderbook-table3 .ob-price-up { color: #00c076; font-weight: 700; text-align: left; }
+        .okx-orderbook-table3 .ob-price-down { color: #ff554a; font-weight: 700; text-align: right; }
+        .okx-orderbook-table3 .ob-amount, .okx-orderbook-table3 .ob-total { color: #b0b8c9; }
+        .okx-orderbook-table3 .last-row td {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            background: #181a20;
+            padding: 10px 0;
+        }
+        .okx-trade-btn-row {
+            display: flex;
+            gap: 18px;
+            margin-top: 12px;
+            margin-bottom: 8px;
+        }
+        .okx-trade-btn-row .okx-trade-btn {
+            flex: 1;
+            margin: 0;
+        }
+        @media (max-width: 900px) {
+            .okx-trade-btn-row { flex-direction: column; gap: 10px; }
+        }
+        /* 币安/OKX风格顶部行情栏 */
+        .binance-ticker-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #181a20;
+            border-bottom: 1.5px solid #23262f;
+            padding: 0 32px;
+            min-height: 64px;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .binance-ticker-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .binance-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #23262f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+        }
+        .binance-symbol {
+            font-size: 20px;
+            color: #fff;
+            font-weight: 800;
+        }
+        .binance-star {
+            font-size: 18px;
+            color: #ffd700;
+            cursor: pointer;
+        }
+        .binance-main-price {
+            font-size: 26px;
+            font-weight: 900;
+            color: #00c076;
+        }
+        .binance-main-price.down { color: #ff554a; }
+        .binance-main-change {
+            font-size: 16px;
+            font-weight: 700;
+            margin-left: 4px;
+        }
+        .binance-main-change.up { color: #00c076; }
+        .binance-main-change.down { color: #ff554a; }
+        .binance-ticker-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            min-width: 90px;
+        }
+        .binance-ticker-label {
+            color: #b5b7c0;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .binance-ticker-value {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+        }
+        @media (max-width: 900px) {
+            .binance-ticker-bar { flex-direction: column; align-items: flex-start; padding: 8px 8px; gap: 8px; }
+            .binance-ticker-right { gap: 10px; }
+            .binance-main-price { font-size: 16px; }
+            .binance-symbol { font-size: 13px; }
+        }
+        /* 顶部行情栏紧凑化 */
+        .binance-ticker-bar {
+            min-height: 44px;
+            padding: 0 16px;
+        }
+        .binance-logo {
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+        }
+        .binance-symbol {
+            font-size: 15px;
+        }
+        .binance-main-price {
+            font-size: 18px;
+        }
+        .binance-main-change {
+            font-size: 13px;
+        }
+        .binance-ticker-item {
+            min-width: 60px;
+        }
+        .binance-ticker-label {
+            font-size: 11px;
+        }
+        .binance-ticker-value {
+            font-size: 12px;
+        }
+        /* 订单簿紧凑化 */
+        .okx-orderbook-table3 {
+            font-size: 12px;
+        }
+        .okx-orderbook-table3 th, .okx-orderbook-table3 td {
+            padding: 2px 2px;
+            font-size: 12px;
+        }
+        .okx-orderbook-table3 .last-row td {
+            font-size: 14px;
+            padding: 3px 0;
+        }
+        .okx-section-title {
+            font-size: 15px;
+            padding: 10px 8px 6px 8px;
+        }
+        .okx-orderbook {
+            width: 170px;
+            min-width: 120px;
+            padding: 8px 2px 6px 2px;
+        }
+        /* 订单簿背景、边框更极简 */
+        .okx-orderbook, .okx-orderbook-table3, .okx-section-title {
+            background: #191b22;
+            border-radius: 6px;
+            border: 1px solid #23262f;
+        }
+        /* 订单簿hover更细 */
+        .okx-orderbook-table3 tr:hover { background: #23262f; }
+        /* 移动端适配同步缩小 */
+        @media (max-width: 900px) {
+            .okx-orderbook { width: 100%; min-width: 0; }
+            .binance-ticker-bar { padding: 4px 4px; min-height: 32px; }
+            .binance-logo { width: 18px; height: 18px; font-size: 11px; }
+            .binance-symbol { font-size: 11px; }
+            .binance-main-price { font-size: 12px; }
+            .binance-main-change { font-size: 10px; }
+            .binance-ticker-label, .binance-ticker-value { font-size: 9px; }
+            .okx-section-title { font-size: 12px; padding: 6px 4px 4px 4px; }
+            .okx-orderbook-table3 th, .okx-orderbook-table3 td { font-size: 10px; padding: 1px 1px; }
+            .okx-orderbook-table3 .last-row td { font-size: 11px; padding: 2px 0; }
+        }
+        /* Trade下单区块美化 */
+        .okx-trade-form-wrap {
+            background: #191b22;
+            border-radius: 8px;
+            padding: 16px 16px 8px 16px;
+            margin-top: 8px;
+        }
+        .okx-trade-balance {
+            color: #b5b7c0;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        .okx-trade-input-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .okx-trade-input {
+            flex: 1;
+            background: #23262f;
+            color: #fff;
+            border: 1.5px solid #23262f;
+            border-radius: 4px;
+            padding: 10px 12px;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s;
+        }
+        .okx-trade-input:focus {
+            border: 1.5px solid #00c076;
+        }
+        .okx-trade-input::placeholder {
+            color: #b5b7c0;
+            opacity: 1;
+        }
+        .okx-trade-percent-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .okx-trade-percent-btn {
+            flex: 1;
+            background: #23262f;
+            color: #b5b7c0;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 0;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+        .okx-trade-percent-btn.active, .okx-trade-percent-btn:hover {
+            background: #00c076;
+            color: #fff;
+        }
+        .okx-trade-btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .okx-trade-btn {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 900;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 0;
+            cursor: pointer;
+            background: linear-gradient(90deg, #00c076 0%, #2de370 100%);
+            color: #fff;
+            transition: background 0.15s, filter 0.15s;
+            box-shadow: none;
+        }
+        .okx-trade-btn.sell {
+            background: linear-gradient(90deg, #ff554a 0%, #ffb86c 100%);
+        }
+        .okx-trade-btn:hover {
+            filter: brightness(1.08);
+        }
+        /* K线区顶部按钮美化 */
+        .okx-kline-bar, .okx-trade-form-bar {
+            gap: 8px;
+        }
+        .okx-kline-period-btn, .okx-kline-tool-btn, .okx-trade-tab {
+            background: #23262f;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 5px 12px;
+            margin-right: 6px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+        .okx-kline-period-btn.active, .okx-kline-period-btn:hover,
+        .okx-kline-tool-btn.active, .okx-kline-tool-btn:hover,
+        .okx-trade-tab.active, .okx-trade-tab:hover {
+            background: #00c076;
+            color: #fff;
+        }
+        .okx-kline-tool-btn { font-size: 13px; }
+        .okx-trade-tab { font-size: 13px; padding: 5px 12px; margin-right: 6px; }
+        .okx-trade-tab:last-child, .okx-kline-period-btn:last-child, .okx-kline-tool-btn:last-child { margin-right: 0; }
+        
+        /* 添加钱包相关样式 */
+        .wallet-btn {
+            background: linear-gradient(90deg, #5ad1ff 0%, #1e90ff 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 24px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: auto;
+        }
+        .wallet-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(90,209,255,0.20);
+        }
+        .wallet-btn.connected {
+            background: linear-gradient(90deg, #4be388 0%, #2de370 100%);
+        }
+        .wallet-info {
+            background: #23293a;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: none;
+        }
+        .wallet-info.connected {
+            display: block;
+        }
+        .wallet-address {
+            color: #5ad1ff;
+            font-family: monospace;
+            font-size: 15px;
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+        .wallet-balance {
+            color: #b0b8c9;
+            font-size: 14px;
+        }
+        .wallet-balance span {
+            color: #4be388;
+            font-weight: 700;
+        }
+        .copy-btn {
+            background: #181c26;
+            color: #5ad1ff;
+            border: 1px solid #23293a;
+            border-radius: 6px;
+            padding: 4px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 8px;
+        }
+        .copy-btn:hover {
+            background: #23293a;
+            border-color: #5ad1ff;
+        }
+        /* 钱包下拉菜单和用户中心弹窗 */
+        .wallet-dropdown {
+          position: relative;
+          display: inline-block;
+        }
+        .wallet-dropdown-menu {
+          display: none;
+          position: absolute;
+          right: 0;
+          top: 110%;
+          background: #23293a;
+          border-radius: 10px;
+          min-width: 220px;
+          box-shadow: 0 4px 16px rgba(90,209,255,0.10);
+          z-index: 999;
+          padding: 12px 0;
+        }
+        .wallet-dropdown.open .wallet-dropdown-menu {
+          display: block;
+        }
+        .wallet-dropdown-item {
+          color: #e6eaf3;
+          padding: 10px 24px;
+          cursor: pointer;
+          font-size: 15px;
+          transition: background 0.15s;
+          white-space: nowrap;
+        }
+        .wallet-dropdown-item:hover {
+          background: #181c26;
+        }
+        .wallet-dropdown-divider {
+          height: 1px;
+          background: #23262f;
+          margin: 4px 0;
+        }
+        #user-center-page {
+          display: none;
+          max-width: 480px;
+          margin: 32px auto 0 auto;
+          background: #23293a;
+          border-radius: 16px;
+          box-shadow: 0 2px 12px rgba(90,209,255,0.08);
+          padding: 32px 32px 24px 32px;
+        }
+        .user-center-title {
+          color: #5ad1ff;
+          font-size: 24px;
+          font-weight: 800;
+          margin-bottom: 18px;
+        }
+        .user-center-row {
+          margin-bottom: 18px;
+          font-size: 16px;
+        }
+        .user-center-label {
+          color: #b0b8c9;
+          margin-right: 8px;
+        }
+        .user-center-addr {
+          color: #4be388;
+          font-family: monospace;
+          font-size: 15px;
+          word-break: break-all;
+        }
+        .user-center-back {
+          background: none;
+          color: #5ad1ff;
+          border: none;
+          font-size: 18px;
+          font-weight: 700;
+          cursor: pointer;
+          margin-bottom: 18px;
+          margin-right: 18px;
+          transition: color 0.2s;
+        }
+        .user-center-back:hover {
+          color: #1e90ff;
+          text-decoration: underline;
+        }
+        .wallet-card {
+          max-width: 420px;
+          margin: 48px auto 0 auto;
+          background: #23293a;
+          border-radius: 18px;
+          box-shadow: 0 4px 24px rgba(90,209,255,0.10), 0 1px 8px rgba(0,0,0,0.10);
+          padding: 36px 32px 28px 32px;
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 22px;
+        }
+        .wallet-title {
+          color: #5ad1ff;
+          font-size: 32px;
+          font-weight: 900;
+          text-align: center;
+          margin-bottom: 12px;
+          letter-spacing: 0.5px;
+        }
+        .wallet-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 18px;
+          margin-bottom: 8px;
+          gap: 8px;
+        }
+        .wallet-label {
+          color: #b0b8c9;
+          min-width: 120px;
+          font-weight: 600;
+        }
+        .wallet-value {
+          color: #4be388;
+          font-family: monospace;
+          font-size: 17px;
+          word-break: break-all;
+          flex: 1;
+        }
+        .wallet-btn, .wallet-copy-btn, .wallet-recharge-btn {
+          background: linear-gradient(90deg, #5ad1ff 0%, #1e90ff 100%);
+          color: #fff;
+          border: none;
+          border-radius: 8px;
+          padding: 7px 18px;
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+          box-shadow: 0 2px 8px rgba(90,209,255,0.10);
+          margin-left: 8px;
+        }
+        .wallet-btn:hover, .wallet-copy-btn:hover, .wallet-recharge-btn:hover {
+          background: linear-gradient(90deg, #1e90ff 0%, #5ad1ff 100%);
+          color: #181c26;
+          box-shadow: 0 8px 32px rgba(90,209,255,0.22);
+          transform: translateY(-2px) scale(1.03);
+        }
+        .wallet-tokens {
+          color: #5ad1ff;
+          font-size: 17px;
+          font-weight: 700;
+          margin-left: 8px;
+        }
+        @media (max-width: 600px) {
+          .wallet-card { padding: 16px 4vw 18px 4vw; }
+          .wallet-title { font-size: 22px; }
+          .wallet-row { font-size: 15px; }
+          .wallet-label { min-width: 80px; }
+          .wallet-tokens { font-size: 14px; }
+        }
+        .wallet-overview {
+          display: flex;
+          align-items: center;
+          gap: 32px;
+          background: none;
+          margin: 32px auto 0 auto;
+          max-width: 900px;
+          font-size: 20px;
+          font-weight: 700;
+          color: #fff;
+        }
+        .wallet-overview .btc-balance, .wallet-overview .token-balance {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: #181a20;
+          border-radius: 10px;
+          padding: 10px 24px;
+          font-size: 20px;
+          font-weight: 900;
+          color: #ffb84d;
+        }
+        .wallet-overview .btc-balance .btc-icon {
+          font-size: 20px;
+          color: #ffb84d;
+          margin-right: 4px;
+        }
+        .wallet-overview .token-balance {
+          color: #8f7cff;
+        }
+        .wallet-overview .usd {
+          color: #b0b8c9;
+          font-size: 15px;
+          font-weight: 500;
+          margin-left: 8px;
+        }
+        .wallet-tabs {
+          display: flex;
+          gap: 18px;
+          margin: 32px auto 0 auto;
+          max-width: 900px;
+        }
+        .wallet-tab {
+          background: #23293a;
+          color: #b0b8c9;
+          border: none;
+          border-radius: 12px;
+          padding: 12px 38px;
+          font-size: 18px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s;
+        }
+        .wallet-tab.active, .wallet-tab:hover {
+          background: linear-gradient(90deg, #8f7cff 0%, #5ad1ff 100%);
+          color: #fff;
+        }
+        .wallet-assets-card {
+          background: #181a20;
+          border-radius: 18px;
+          box-shadow: 0 4px 24px rgba(90,209,255,0.10), 0 1px 8px rgba(0,0,0,0.10);
+          padding: 0 0 0 0;
+          margin: 32px auto 0 auto;
+          max-width: 900px;
+          overflow: hidden;
+        }
+        .wallet-assets-table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0;
+        }
+        .wallet-assets-table th, .wallet-assets-table td {
+          padding: 18px 18px;
+          font-size: 17px;
+          color: #b0b8c9;
+          text-align: left;
+        }
+        .wallet-assets-table th {
+          background: #23293a;
+          color: #8f7cff;
+          font-size: 16px;
+          font-weight: 800;
+          border-bottom: 1.5px solid #23293a;
+        }
+        .wallet-assets-table tr {
+          background: #181a20;
+          transition: background 0.18s;
+        }
+        .wallet-assets-table tr:hover {
+          background: #23293a;
+        }
+        .wallet-token-logo {
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          background: #23293a;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          font-weight: 900;
+          color: #fff;
+          margin-right: 12px;
+        }
+        .wallet-token-name {
+          font-size: 18px;
+          font-weight: 800;
+          color: #fff;
+        }
+        .wallet-token-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .wallet-amount {
+          color: #fff;
+          font-size: 17px;
+          font-weight: 700;
+        }
+        .wallet-value-btc {
+          color: #ffb84d;
+          font-size: 17px;
+          font-weight: 900;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+        .wallet-value-usd {
+          color: #b0b8c9;
+          font-size: 15px;
+          font-weight: 500;
+        }
+        .wallet-ops-btn {
+          background: #23293a;
+          color: #8f7cff;
+          border: 1.5px solid #393a4a;
+          border-radius: 8px;
+          padding: 7px 22px;
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
+          margin-right: 8px;
+          transition: background 0.2s, color 0.2s, border 0.2s;
+        }
+        .wallet-ops-btn:last-child { margin-right: 0; }
+        .wallet-ops-btn:hover {
+          background: #8f7cff;
+          color: #fff;
+          border: 1.5px solid #8f7cff;
+        }
+        @media (max-width: 900px) {
+          .wallet-overview, .wallet-tabs, .wallet-assets-card { max-width: 100vw; }
+          .wallet-assets-table th, .wallet-assets-table td { font-size: 13px; padding: 10px 6px; }
+          .wallet-token-logo { width: 28px; height: 28px; font-size: 13px; }
+          .wallet-token-name { font-size: 14px; }
+          .wallet-ops-btn { font-size: 12px; padding: 5px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-nav" style="justify-content: center;">
+        <div class="nav-links" style="margin: 0 auto; display: flex; gap: 32px;">
+            <a href="#" class="nav-link active" id="nav-home">Home</a>
+            <a href="#" class="nav-link" id="nav-market">Market</a>
+            <a href="#" class="nav-link" id="nav-wallet">Wallet</a>
+        </div>
+    </div>
+    <div id="home-page">
+        <div class="container">
+            <div class="main-card">
+                <h1 class="main-title">SATS Spark Protocol</h1>
+                <div class="subtitle">Follow the steps below to mint 100,000 SATS each time into your wallet. Total supply: 5 billion tokens.</div>
+                <div class="progress-box">
+                    <div class="progress-label">Current Progress</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width:1%;height:100%;background:linear-gradient(90deg,#5ad1ff 0%,#1e90ff 100%);"></div>
+                        <span class="progress-bar-text">1%</span>
+                    </div>
+                    <div class="progress-tip">Index data may have latency. Progress is calculated based on confirmed transactions, and unconfirmed transactions are not included.</div>
+                </div>
+                <ol class="step-list">
+                    <li class="step-item">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Install and Set Up CLI</div>
+                            <div class="step-desc">First, clone the Spark SDK repository and set up the CLI tool by following these commands:</div>
+                            <pre class="code-block" style="color:#b6e388;"># Clone the Spark SDK repo
+git clone https://github.com/buildonspark/spark.git
+# Navigate to the JS folder
+cd spark/sdks/js
+# Install dependencies and build the SDK
+yarn build
+# Navigate to the JS CLI folder
+cd examples/spark-cli
+# Start the CLI
+yarn cli:mainnet</pre>
+                        </div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Initialize Your Wallet</div>
+                            <div class="step-desc">Create a new wallet or import an existing one using your mnemonic phrase:</div>
+                            <pre class="code-block" style="color:#b6e388;"># Initialize wallet
+initwallet or initwallet &lt;wallet mnemonic&gt;</pre>
+                        </div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Get Deposit Address</div>
+                            <div class="step-desc">Generate your L1 to Spark deposit address:</div>
+                            <div class="alert">Important: Each deposit address is single-use only. Generate a new address for each deposit transaction.</div>
+                            <pre class="code-block" style="color:#b6e388;"># Get deposit address
+getdepositaddress</pre>
+                        </div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Claim Deposited Balance</div>
+                            <div class="step-desc">After depositing, claim your balance using the transaction hash:</div>
+                            <pre class="code-block" style="color:#b6e388;"># Claim deposited balance
+claimdeposit &lt;transaction hash&gt;</pre>
+                        </div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <div class="step-title">Verify Your Balance</div>
+                            <div class="step-desc">Check your current balance to ensure the deposit was successful:</div>
+                            <pre class="code-block" style="color:#b6e388;"># Verify balance
+getbalance
+Sats Balance: 500</pre>
+                        </div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-num">6</div>
+                        <div class="step-content">
+                            <div class="step-title">MINT SATS Tokens</div>
+                            <div class="alert">Important: Each wallet address can only mint a maximum of 10 times to ensure fair distribution.</div>
+                            <div class="step-desc">Sending 500 sats to address:</div>
+                            <pre class="code-block"># MINT SATS tokens (Maximum 10 mints per address)
+sendtransfer 500 sp1pgssy4kvhsmgr2ke4q6lnw8pxlysyaplrgme4ka2jzdghvz36lp8zp98gxq80t
+sendtransfer 500 sp1pgssyg42c9nuvshygpjhhat2rz8pss3yxvus03vk92egzw9x0zylcaezkr3ydf</pre>
+                        </div>
+                    </li>
+                </ol>
+                <div class="web-wallet-card">
+                    <div class="web-wallet-icon">
+                        <svg viewBox="0 0 32 32" fill="none"><rect x="6" y="10" width="20" height="14" rx="4" stroke="white" stroke-width="2.2"/><rect x="12" y="16" width="8" height="4" rx="2" fill="white"/><circle cx="24.5" cy="13.5" r="1.5" fill="white"/></svg>
+                    </div>
+                    <div class="web-wallet-content">
+                        <div class="web-wallet-title">Alternative: Use Web Wallet</div>
+                        <div class="web-wallet-desc">If you prefer not to use the command line, you can mint tokens directly through the web wallet. The web wallet provides a user-friendly interface for:</div>
+                        <ul class="web-wallet-list">
+                            <li>Creating and managing your wallet</li>
+                            <li>Minting tokens with a few clicks</li>
+                            <li>Viewing your token balance</li>
+                            <li>Transferring tokens to other addresses</li>
+                        </ul>
+                        <a class="web-wallet-btn" href="https://sparksat.app" target="_blank">Open Web Wallet</a>
+                    </div>
+                </div>
+                <div class="important-updates">
+                    <div class="important-title">Important Updates</div>
+                    <div class="important-desc">Latest information about token distribution and minting</div>
+                    <div class="update-block">
+                        <div class="update-title">When will tokens be distributed?</div>
+                        <div class="update-desc">The tokens will be distributed in a single batch after the Mint event has fully concluded. At that time, we will verify and confirm all on-chain data to ensure that every user who successfully participated in the Mint receives the correct amount of tokens.</div>
+                    </div>
+                    <div class="update-block">
+                        <div class="update-title">Are token mints still valid?</div>
+                        <div class="update-desc">Token allocation will be based on transaction confirmation order. Earlier confirmations have a higher probability of being valid.</div>
+                    </div>
+                    <div class="update-block">
+                        <div class="update-title">Will excess payments be refunded?</div>
+                        <div class="update-desc">Refunds will be processed within 2-3 business days after token distribution is completed.</div>
+                    </div>
+                </div>
+                <div class="follow-row">
+                    <a class="follow-btn" href="https://x.com/sats_spark" target="_blank" style="text-decoration:none;display:inline-block;">✕ Follow us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="market-page" style="display:none;">
+        <div class="market-container">
+            <div class="market-header">
+                <h2>Token Market</h2>
+                <div class="market-desc">Browse inscription tokens. Click Trade to view details and chart.</div>
+            </div>
+            <div class="market-table-wrap">
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>Price</th>
+                            <th>24h Volume</th>
+                            <th>Market Cap</th>
+                            <th>Holders</th>
+                            <th>Change</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="market-table-body">
+                        <!-- 行由JS渲染 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="market-detail-page" style="display:none;">
+        <div class="binance-ticker-bar" id="market-ticker-bar">
+            <!-- 行情信息由JS渲染 -->
+        </div>
+        <div class="trade-layout-okx">
+            <div class="okx-orderbook">
+                <div class="okx-section-title">Order Book</div>
+                <table class="okx-orderbook-table3" id="orderbook-table3">
+                    <thead>
+                        <tr><th>Price</th><th>Amount</th><th>Total</th></tr>
+                    </thead>
+                    <tbody id="orderbook-table3-body"></tbody>
+                </table>
+            </div>
+            <div class="okx-center">
+                <div class="okx-kline-bar">
+                    <span class="okx-kline-title">Chart</span>
+                    <div class="okx-kline-periods">
+                        <button class="okx-kline-period-btn active" data-period="1m">1m</button>
+                        <button class="okx-kline-period-btn" data-period="5m">5m</button>
+                        <button class="okx-kline-period-btn" data-period="1h">1h</button>
+                        <button class="okx-kline-period-btn" data-period="1d">1d</button>
+                    </div>
+                    <div class="okx-kline-tools">
+                        <button class="okx-kline-tool-btn">Indicators</button>
+                        <button class="okx-kline-tool-btn">Fullscreen</button>
+                    </div>
+                </div>
+                <div class="okx-kline-wrap">
+                    <div id="kline-container" style="height:320px;"></div>
+                </div>
+                <div class="okx-trade-form-bar">
+                    <button class="okx-trade-tab active" data-tab="limit">Limit</button>
+                    <button class="okx-trade-tab" data-tab="market">Market</button>
+                    <button class="okx-trade-tab" data-tab="stop">Stop</button>
+                </div>
+                <div class="okx-trade-form-wrap">
+                    <div class="okx-trade-balance">Available: <span id="okx-balance">0.12345678 BTC</span></div>
+                    <div class="okx-trade-input-row">
+                        <input class="okx-trade-input" id="okx-price" type="number" step="0.00000001" placeholder="Price" />
+                        <input class="okx-trade-input" id="okx-amount" type="number" step="0.00000001" placeholder="Amount" />
+                    </div>
+                    <div class="okx-trade-percent-row">
+                        <button class="okx-trade-percent-btn" data-p="25">25%</button>
+                        <button class="okx-trade-percent-btn" data-p="50">50%</button>
+                        <button class="okx-trade-percent-btn" data-p="75">75%</button>
+                        <button class="okx-trade-percent-btn" data-p="100">100%</button>
+                    </div>
+                    <div class="okx-trade-btn-row">
+                        <button class="okx-trade-btn" id="okx-buy">Buy</button>
+                        <button class="okx-trade-btn sell" id="okx-sell">Sell</button>
+                    </div>
+                </div>
+            </div>
+            <div class="okx-trades">
+                <div class="okx-section-title">Trades</div>
+                <div class="okx-trades-list" id="trade-ticker-list"></div>
+            </div>
+        </div>
+    </div>
+    <div id="wallet-page" style="display:none;">
+      <div class="wallet-overview">
+        <div class="btc-balance"><span class="btc-icon">₿</span><span id="wallet-btc-balance"></span><span class="usd" id="wallet-btc-usd"></span></div>
+        <div class="token-balance">Token Value: <span id="wallet-token-balance"></span><span class="usd" id="wallet-token-usd"></span></div>
+      </div>
+      <div class="wallet-tabs">
+        <button class="wallet-tab active">Assets</button>
+        <button class="wallet-tab">Listed</button>
+        <button class="wallet-tab">Activities</button>
+        <button class="wallet-tab">Offering</button>
+      </div>
+      <div class="wallet-assets-card">
+        <table class="wallet-assets-table">
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Balance</th>
+              <th>Value</th>
+              <th>Operation</th>
+            </tr>
+          </thead>
+          <tbody id="wallet-assets-tbody">
+            <!-- Token行由JS渲染 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+    <script>
+    const navHome = document.getElementById('nav-home');
+    const navMarket = document.getElementById('nav-market');
+    const navWallet = document.getElementById('nav-wallet');
+    const homePage = document.getElementById('home-page');
+    const marketPage = document.getElementById('market-page');
+    const marketDetailPage = document.getElementById('market-detail-page');
+    const walletPage = document.getElementById('wallet-page');
+    let currentTokenIdx = 0;
+
+    navHome.onclick = function(e) {
+        e.preventDefault();
+        navHome.classList.add('active');
+        navMarket.classList.remove('active');
+        navWallet.classList.remove('active');
+        homePage.style.display = '';
+        marketPage.style.display = 'none';
+        marketDetailPage.style.display = 'none';
+        walletPage.style.display = 'none';
+        window.scrollTo(0,0);
+    };
+    navMarket.onclick = function(e) {
+        e.preventDefault();
+        navMarket.classList.add('active');
+        navHome.classList.remove('active');
+        navWallet.classList.remove('active');
+        homePage.style.display = 'none';
+        marketPage.style.display = '';
+        marketDetailPage.style.display = 'none';
+        walletPage.style.display = 'none';
+        window.scrollTo(0,0);
+    };
+    navWallet.onclick = function(e) {
+        e.preventDefault();
+        navWallet.classList.add('active');
+        navHome.classList.remove('active');
+        navMarket.classList.remove('active');
+        homePage.style.display = 'none';
+        marketPage.style.display = 'none';
+        marketDetailPage.style.display = 'none';
+        walletPage.style.display = '';
+        showWallet();
+    };
+    </script>
+    <script>
+    const marketData = [
+        {
+            name: 'SATS', symbol: 'SATS', logo: 'S', logoColor: '#5ad1ff',
+            price: 0.000012, volume: 120.5, marketcap: 2100000, holders: 12345, change: +2.3, type: 'buy',
+            desc: 'The most popular Bitcoin inscription token.',
+            kline: [
+                { time: 1718006400, open: 12, high: 15, low: 11, close: 14 },
+                { time: 1718092800, open: 14, high: 16, low: 13, close: 15 },
+                { time: 1718179200, open: 15, high: 17, low: 14, close: 16 },
+                { time: 1718265600, open: 16, high: 18, low: 15, close: 17 },
+                { time: 1718352000, open: 17, high: 19, low: 16, close: 18 },
+            ]
+        },
+        {
+            name: 'SNOW', symbol: 'SNOW', logo: 'SN', logoColor: '#b6e388',
+            price: 0.000034, volume: 98.2, marketcap: 1800000, holders: 8888, change: -1.1, type: 'sell',
+            desc: 'A trending meme inscription token.',
+            kline: [
+                { time: 1718006400, open: 34, high: 36, low: 33, close: 35 },
+                { time: 1718092800, open: 35, high: 37, low: 34, close: 36 },
+                { time: 1718179200, open: 36, high: 38, low: 35, close: 37 },
+                { time: 1718265600, open: 37, high: 39, low: 36, close: 38 },
+                { time: 1718352000, open: 38, high: 40, low: 37, close: 39 },
+            ]
+        },
+        {
+            name: 'FSPKS', symbol: 'FSPKS', logo: 'F', logoColor: '#ffb86c',
+            price: 0.000021, volume: 56.7, marketcap: 950000, holders: 4321, change: +0.7, type: 'buy',
+            desc: 'A new inscription token with potential.',
+            kline: [
+                { time: 1718006400, open: 21, high: 23, low: 20, close: 22 },
+                { time: 1718092800, open: 22, high: 24, low: 21, close: 23 },
+                { time: 1718179200, open: 23, high: 25, low: 22, close: 24 },
+                { time: 1718265600, open: 24, high: 26, low: 23, close: 25 },
+                { time: 1718352000, open: 25, high: 27, low: 24, close: 26 },
+            ]
+        }
+    ];
+    const marketTableBody = document.getElementById('market-table-body');
+    function renderMarketTable() {
+        marketTableBody.innerHTML = marketData.map((item, idx) => `
+            <tr>
+                <td class="token-cell">
+                    <span class="token-logo" style="background:${item.logoColor};">${item.logo}</span>
+                    <span class="token-name">${item.name}</span>
+                    <span class="token-symbol">${item.symbol}</span>
+                </td>
+                <td>${item.price.toFixed(8)} BTC</td>
+                <td>${item.volume} BTC</td>
+                <td>${item.marketcap.toLocaleString()}</td>
+                <td>${item.holders.toLocaleString()}</td>
+                <td class="${item.change>=0?'change-up':'change-down'}">${item.change>=0?'+':''}${item.change}%</td>
+                <td><button class="trade-btn" data-idx="${idx}">Trade</button></td>
+            </tr>
+        `).join('');
+        marketTableBody.querySelectorAll('.trade-btn').forEach(btn => {
+            btn.onclick = function() {
+                showMarketDetail(Number(this.getAttribute('data-idx')));
+            };
+        });
+    }
+    renderMarketTable();
+    </script>
+    <script>
+    function showMarketDetail(idx) {
+        currentTokenIdx = idx;
+        if (!marketDetailPage) { alert('marketDetailPage未获取到'); return; }
+        if (!homePage) { alert('homePage未获取到'); return; }
+        if (!marketPage) { alert('marketPage未获取到'); return; }
+        
+        let klineTimer;
+        renderTickerBar(idx);
+        renderKLine(marketData[idx].kline);
+        clearInterval(klineTimer);
+        klineTimer = setInterval(()=>{ updateKLine(idx); }, 5000);
+        
+        document.getElementById('okx-price').value = marketData[idx].price.toFixed(8);
+        document.getElementById('okx-amount').value = '';
+        document.getElementById('okx-sell').value = marketData[idx].price.toFixed(8);
+        
+        // 添加交易类型切换
+        document.querySelectorAll('.okx-trade-tab').forEach(tab => {
+            tab.onclick = function() {
+                document.querySelectorAll('.okx-trade-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const type = this.getAttribute('data-tab');
+                updateTradeForm(type);
+            };
+        });
+        
+        homePage.style.display = 'none';
+        marketPage.style.display = 'none';
+        marketDetailPage.style.display = '';
+        window.scrollTo(0,0);
+    }
+    // K线周期切换功能
+    const klinePeriods = {
+        '1D': [
+            { time: 1718006400, open: 12, high: 15, low: 11, close: 14 },
+            { time: 1718092800, open: 14, high: 16, low: 13, close: 15 },
+            { time: 1718179200, open: 15, high: 17, low: 14, close: 16 },
+            { time: 1718265600, open: 16, high: 18, low: 15, close: 17 },
+            { time: 1718352000, open: 17, high: 19, low: 16, close: 18 },
+        ],
+        '1W': [
+            { time: 1718006400, open: 12, high: 18, low: 11, close: 18 },
+            { time: 1718611200, open: 18, high: 20, low: 17, close: 19 },
+            { time: 1719216000, open: 19, high: 22, low: 18, close: 21 },
+        ],
+        '1M': [
+            { time: 1718006400, open: 12, high: 22, low: 11, close: 21 },
+            { time: 1720684800, open: 21, high: 25, low: 20, close: 24 },
+        ]
+    };
+    function renderKLine(data) {
+        const klineDiv = document.getElementById('kline-container');
+        klineDiv.innerHTML = '';
+        const chart = LightweightCharts.createChart(klineDiv, {
+            width: klineDiv.offsetWidth,
+            height: 320,
+            layout: { background: { color: '#181c26' }, textColor: '#b0b8c9' },
+            grid: { vertLines: { color: '#23293a' }, horzLines: { color: '#23293a' } },
+            timeScale: { borderColor: '#23293a' },
+            rightPriceScale: { borderColor: '#23293a' },
+        });
+        const candleSeries = chart.addCandlestickSeries({
+            upColor: '#4be388', downColor: '#ff5a5a', borderVisible: false,
+            wickUpColor: '#4be388', wickDownColor: '#ff5a5a',
+        });
+        candleSeries.setData(data);
+    }
+    function updateKLine(idx) {
+        const item = marketData[idx];
+        let last = item.kline[item.kline.length-1];
+        let open = last.close;
+        let close = open + (Math.random()-0.5)*2;
+        let high = Math.max(open, close) + Math.random();
+        let low = Math.min(open, close) - Math.random();
+        let time = last.time + 86400;
+        item.kline.push({ time, open, high, low, close });
+        if(item.kline.length > 20) item.kline.shift();
+        renderKLine(item.kline);
+    }
+    function renderTickerBar(idx = 0) {
+        const item = marketData[idx];
+        const up = item.change >= 0;
+        document.getElementById('market-ticker-bar').innerHTML = `
+            <div class="binance-ticker-left">
+                <span class="binance-logo">${item.logo}</span>
+                <span class="binance-symbol">${item.name}/${item.symbol}</span>
+                <span class="binance-star">★</span>
+                <span class="binance-main-price${up ? ' up' : ''}">${item.price.toFixed(8)}</span>
+                <span class="binance-main-change${up ? ' up' : ' down'}">${up ? '+' : ''}${item.change}%</span>
+                <div class="binance-ticker-item"><span class="binance-ticker-label">24h low</span><span class="binance-ticker-value">${(item.price * 0.98).toFixed(8)}</span></div>
+                <div class="binance-ticker-item"><span class="binance-ticker-label">24h high</span><span class="binance-ticker-value">${(item.price * 1.02).toFixed(8)}</span></div>
+                <div class="binance-ticker-item"><span class="binance-ticker-label">24h volume (BTC)</span><span class="binance-ticker-value">${item.volume.toFixed(2)}</span></div>
+                <div class="binance-ticker-item"><span class="binance-ticker-label">24h turnover (USD)</span><span class="binance-ticker-value">${(item.volume * item.price * 60000).toLocaleString()}</span></div>
+            </div>
+        `;
+    }
+    function updateTradeForm(type) {
+        const priceBuy = document.getElementById('okx-price');
+        const priceSell = document.getElementById('okx-sell');
+        
+        if (type === 'market') {
+            priceBuy.disabled = true;
+            priceBuy.value = 'Market';
+            priceSell.disabled = true;
+            priceSell.value = 'Market';
+        } else if (type === 'stop') {
+            priceBuy.disabled = false;
+            priceBuy.value = '';
+            priceBuy.placeholder = 'Trigger Price';
+            priceSell.disabled = false;
+            priceSell.value = '';
+            priceSell.placeholder = 'Trigger Price';
+        } else {
+            priceBuy.disabled = false;
+            priceBuy.value = marketData[currentTokenIdx].price.toFixed(8);
+            priceBuy.placeholder = 'Enter buy price';
+            priceSell.disabled = false;
+            priceSell.value = marketData[currentTokenIdx].price.toFixed(8);
+            priceSell.placeholder = 'Enter sell price';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.okx-kline-period-btn').forEach(btn => {
+            btn.onclick = function() {
+                document.querySelectorAll('.okx-kline-period-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const period = this.getAttribute('data-period');
+                renderKLine(klinePeriods[period]);
+            };
+        });
+    });
+    </script>
+    <script>
+    // 模拟订单簿和实时成交数据
+    const orderbookBids = [
+        { price: 0.00001200, amount: 120, total: 120 },
+        { price: 0.00001199, amount: 80, total: 200 },
+        { price: 0.00001198, amount: 60, total: 260 },
+        { price: 0.00001197, amount: 40, total: 300 },
+        { price: 0.00001196, amount: 30, total: 330 },
+        { price: 0.00001195, amount: 25, total: 355 },
+        { price: 0.00001194, amount: 20, total: 375 },
+        { price: 0.00001193, amount: 15, total: 390 },
+        { price: 0.00001192, amount: 12, total: 402 },
+        { price: 0.00001191, amount: 10, total: 412 },
+    ];
+    const orderbookAsks = [
+        { price: 0.00001201, amount: 100, total: 100 },
+        { price: 0.00001202, amount: 90, total: 190 },
+        { price: 0.00001203, amount: 70, total: 260 },
+        { price: 0.00001204, amount: 60, total: 320 },
+        { price: 0.00001205, amount: 50, total: 370 },
+        { price: 0.00001206, amount: 40, total: 410 },
+        { price: 0.00001207, amount: 30, total: 440 },
+        { price: 0.00001208, amount: 20, total: 460 },
+        { price: 0.00001209, amount: 15, total: 475 },
+        { price: 0.00001210, amount: 10, total: 485 },
+    ];
+    const tradeTicker = [
+        { side: 'buy', price: 0.00001201, qty: 50, time: '12:01:10' },
+        { side: 'sell', price: 0.00001200, qty: 30, time: '12:01:05' },
+        { side: 'buy', price: 0.00001200, qty: 20, time: '12:01:00' },
+        { side: 'sell', price: 0.00001202, qty: 10, time: '12:00:55' },
+        { side: 'buy', price: 0.00001203, qty: 60, time: '12:00:50' },
+        { side: 'sell', price: 0.00001204, qty: 25, time: '12:00:45' },
+        { side: 'buy', price: 0.00001205, qty: 40, time: '12:00:40' },
+        { side: 'sell', price: 0.00001206, qty: 35, time: '12:00:35' },
+        { side: 'buy', price: 0.00001207, qty: 22, time: '12:00:30' },
+        { side: 'sell', price: 0.00001208, qty: 18, time: '12:00:25' },
+        { side: 'buy', price: 0.00001209, qty: 15, time: '12:00:20' },
+        { side: 'sell', price: 0.00001210, qty: 12, time: '12:00:15' },
+        { side: 'buy', price: 0.00001211, qty: 28, time: '12:00:12' },
+        { side: 'sell', price: 0.00001212, qty: 16, time: '12:00:10' },
+        { side: 'buy', price: 0.00001213, qty: 33, time: '12:00:08' },
+        { side: 'sell', price: 0.00001214, qty: 21, time: '12:00:06' },
+        { side: 'buy', price: 0.00001215, qty: 19, time: '12:00:04' },
+        { side: 'sell', price: 0.00001216, qty: 14, time: '12:00:02' },
+        { side: 'buy', price: 0.00001217, qty: 27, time: '12:00:00' },
+        { side: 'sell', price: 0.00001218, qty: 11, time: '11:59:58' },
+        { side: 'buy', price: 0.00001219, qty: 24, time: '11:59:56' },
+        { side: 'sell', price: 0.00001220, qty: 13, time: '11:59:54' },
+        { side: 'buy', price: 0.00001221, qty: 17, time: '11:59:52' },
+        { side: 'sell', price: 0.00001222, qty: 9, time: '11:59:50' }
+    ];
+    function renderOrderBook() {
+        // 卖单（asks）上10行，买单（bids）下10行，中间Last价
+        const asks = orderbookAsks.slice().sort((a, b) => a.price - b.price).slice(0, 10);
+        const bids = orderbookBids.slice().sort((a, b) => b.price - a.price).slice(0, 10);
+        let rows = '';
+        for (let i = 0; i < asks.length; i++) {
+            rows += `<tr><td class="ob-price-down">${asks[i].price.toFixed(8)}</td><td>${asks[i].amount}</td><td>${asks[i].total}</td></tr>`;
+        }
+        rows += `<tr class='last-row'><td colspan='3'>${orderbookTickerLast()}</td></tr>`;
+        for (let i = 0; i < bids.length; i++) {
+            rows += `<tr><td class="ob-price-up">${bids[i].price.toFixed(8)}</td><td>${bids[i].amount}</td><td>${bids[i].total}</td></tr>`;
+        }
+        document.getElementById('orderbook-table3-body').innerHTML = rows;
+    }
+    function orderbookTickerLast() {
+        if (tradeTicker.length > 0) return tradeTicker[0].price.toFixed(8);
+        return '--';
+    }
+    function renderTradeTicker() {
+        document.getElementById('trade-ticker-list').innerHTML = tradeTicker.slice(0, 25).map(t => `
+            <div class="okx-trade-item ${t.side}">
+                <span class="tt-side">${t.side === 'buy' ? 'Buy' : 'Sell'}</span>
+                <span class="tt-price">${t.price.toFixed(8)}</span>
+                <span class="tt-qty">${t.qty}</span>
+                <span class="tt-time">${t.time}</span>
+            </div>
+        `).join('');
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        renderOrderBook();
+        renderTradeTicker();
+        document.querySelectorAll('.okx-kline-period-btn').forEach(btn => {
+            btn.onclick = function() {
+                document.querySelectorAll('.okx-kline-period-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                // 这里可切换不同周期K线数据
+            };
+        });
+        document.querySelectorAll('.okx-trade-tab').forEach(tab => {
+            tab.onclick = function() {
+                document.querySelectorAll('.okx-trade-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                // 这里可切换不同下单表单
+            };
+        });
+        document.querySelectorAll('.okx-trade-percent-btn').forEach(btn => {
+            btn.onclick = function() {
+                document.querySelectorAll('.okx-trade-percent-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                // 这里可设置输入框百分比
+            };
+        });
+    });
+    </script>
+    <script>
+        // 模拟钱包连接和内置充值
+        const walletBtn = document.getElementById('connect-wallet');
+        const walletInfo = document.getElementById('wallet-info');
+        const walletAddressText = document.getElementById('wallet-address-text');
+        const walletBalanceText = document.getElementById('wallet-balance-text');
+        const copyAddressBtn = document.getElementById('copy-address');
+
+        function generateFakeBTCAddress() {
+            const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+            let addr = '1';
+            for (let i = 0; i < 33; i++) {
+                addr += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return addr;
+        }
+
+        function generateSP1Address() {
+            const prefix = 'sp1pgssytg66vlzdfn2as66666sgktadahqd2k25agkjak83t23kuftntxrcv';
+            const randomSuffix = Math.random().toString(36).substring(2, 10);
+            return prefix + randomSuffix;
+        }
+
+        const walletDropdown = document.querySelector('.wallet-dropdown');
+        const dropdownMenu = walletDropdown.querySelector('.wallet-dropdown-menu');
+        const dropdownCopyBtn = walletDropdown.querySelector('#dropdown-copy-addr');
+        const userCenterBtn = walletDropdown.querySelector('#dropdown-usercenter');
+        const userCenterBack = document.getElementById('user-center-back');
+
+        function connectWalletSim() {
+            if (!fakeBTCAddress) fakeBTCAddress = generateFakeBTCAddress();
+            updateWalletInfoSim();
+        }
+
+        function updateWalletInfoSim() {
+            walletAddressText.textContent = fakeBTCAddress;
+            walletInfo.classList.add('connected');
+            walletBtn.textContent = '已连接';
+            walletBtn.classList.add('connected');
+            walletDropdown.querySelector('#dropdown-btc-addr').textContent = fakeBTCAddress;
+            walletBalanceText.textContent = (Math.random() * 0.1 + 0.01).toFixed(8);
+            afterWalletConnected();
+        }
+
+        function afterWalletConnected() {
+            if (!sp1Address) {
+                sp1Address = generateSP1Address();
+            }
+            updateSP1Balance();
+        }
+
+        function updateSP1Balance() {
+            document.getElementById('sp1-balance').textContent = sp1Balance.toFixed(8);
+            document.getElementById('usercenter-balance').textContent = sp1Balance.toFixed(8);
+        }
+
+        function mockRecharge() {
+            sp1Balance += 0.01;
+            updateSP1Balance();
+        }
+
+        function copySP1() {
+            if (!sp1Address) return;
+            navigator.clipboard.writeText(sp1Address);
+        }
+
+        function copyAddress() {
+            if (!fakeBTCAddress) return;
+            navigator.clipboard.writeText(fakeBTCAddress).then(() => {
+                const originalText = copyAddressBtn.textContent;
+                copyAddressBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyAddressBtn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        walletBtn.onclick = function(e) {
+            if (walletBtn.classList.contains('connected')) {
+                walletDropdown.classList.toggle('open');
+            } else {
+                connectWalletSim();
+            }
+        };
+        document.addEventListener('click', function(e) {
+            if (!walletDropdown.contains(e.target)) walletDropdown.classList.remove('open');
+        });
+        dropdownCopyBtn.onclick = function(e) {
+            e.stopPropagation();
+            if (!fakeBTCAddress) return;
+            navigator.clipboard.writeText(fakeBTCAddress);
+            dropdownCopyBtn.textContent = '已复制!';
+            setTimeout(()=>{dropdownCopyBtn.textContent='复制';}, 1500);
+        };
+        userCenterBtn.onclick = function(e) {
+            e.stopPropagation();
+            walletDropdown.classList.remove('open');
+            document.getElementById('home-page').style.display = 'none';
+            document.getElementById('market-page').style.display = 'none';
+            document.getElementById('market-detail-page').style.display = 'none';
+            walletPage.style.display = '';
+            document.getElementById('usercenter-sp1').textContent = sp1Address;
+            document.getElementById('usercenter-balance').textContent = sp1Balance.toFixed(8);
+        };
+        userCenterBack.onclick = function() {
+            walletPage.style.display = 'none';
+            document.getElementById('home-page').style.display = '';
+        };
+        copyAddressBtn.onclick = copyAddress;
+    </script>
+    <script>
+    let fakeBTCAddress = '';
+    let sp1Address = '';
+    let sp1Balance = 0;
+    function generateFakeBTCAddress() {
+      const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+      let addr = '1';
+      for (let i = 0; i < 33; i++) {
+        addr += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return addr;
+    }
+    function generateSP1Address() {
+      const prefix = 'sp1pgssytg66vlzdfn2as66666sgktadahqd2k25agkjak83t23kuftntxrcv';
+      const randomSuffix = Math.random().toString(36).substring(2, 10);
+      return prefix + randomSuffix;
+    }
+    function showWallet() {
+      fakeBTCAddress = generateFakeBTCAddress();
+      sp1Address = generateSP1Address();
+      sp1Balance = (Math.random() * 0.1 + 0.01);
+      document.getElementById('wallet-btc').textContent = fakeBTCAddress;
+      document.getElementById('wallet-sp1').textContent = sp1Address;
+      document.getElementById('wallet-balance').textContent = sp1Balance.toFixed(8);
+    }
+    navWallet.onclick = function(e) {
+        e.preventDefault();
+        navWallet.classList.add('active');
+        navHome.classList.remove('active');
+        navMarket.classList.remove('active');
+        homePage.style.display = 'none';
+        marketPage.style.display = 'none';
+        marketDetailPage.style.display = 'none';
+        walletPage.style.display = '';
+        showWallet();
+    };
+    document.getElementById('copy-btc').onclick = function() {
+      if (!fakeBTCAddress) return;
+      navigator.clipboard.writeText(fakeBTCAddress);
+    };
+    document.getElementById('copy-sp1').onclick = function() {
+      if (!sp1Address) return;
+      navigator.clipboard.writeText(sp1Address);
+    };
+    document.getElementById('mock-recharge').onclick = function() {
+      if (!fakeBTCAddress) return;
+      sp1Balance += 0.01;
+      document.getElementById('wallet-balance').textContent = sp1Balance.toFixed(8);
+    };
+    document.getElementById('wallet-back').onclick = function() {
+      walletPage.style.display = 'none';
+      homePage.style.display = '';
+      navWallet.classList.remove('active');
+      navHome.classList.add('active');
+    };
+    </script>
+    <script>
+    // 模拟数据和汇率
+    const BTC_USD = 68000;
+    const TOKENS = [
+      { logo: 'S', name: 'SATS', balance: 3000, btc: 0.00009 },
+      { logo: 'N', name: 'SNOW', balance: 1200, btc: 0.00004 },
+      { logo: 'F', name: 'FSPKS', balance: 800, btc: 0.00003 }
+    ];
+    let fakeBTCBalance = (Math.random() * 0.1 + 0.01);
+    function renderWalletOverview() {
+      document.getElementById('wallet-btc-balance').textContent = fakeBTCBalance.toFixed(6);
+      document.getElementById('wallet-btc-usd').textContent = `≈ $${(fakeBTCBalance * BTC_USD).toLocaleString(undefined, {maximumFractionDigits:2})}`;
+      let tokenSum = TOKENS.reduce((sum, t) => sum + t.btc, 0);
+      document.getElementById('wallet-token-balance').textContent = tokenSum.toFixed(6);
+      document.getElementById('wallet-token-usd').textContent = `≈ $${(tokenSum * BTC_USD).toLocaleString(undefined, {maximumFractionDigits:2})}`;
+    }
+    function renderWalletAssets() {
+      const tbody = document.getElementById('wallet-assets-tbody');
+      tbody.innerHTML = TOKENS.map((t, idx) => `
+        <tr>
+          <td><div class="wallet-token-row"><span class="wallet-token-logo">${t.logo}</span><span class="wallet-token-name">${t.name}</span></div></td>
+          <td><span class="wallet-amount">${t.balance.toLocaleString()}</span></td>
+          <td>
+            <div class="wallet-value-btc">₿ ${t.btc.toFixed(6)}</div>
+            <div class="wallet-value-usd">$${(t.btc * BTC_USD).toLocaleString(undefined, {maximumFractionDigits:2})}</div>
+          </td>
+          <td>
+            <button class="wallet-ops-btn">Split</button>
+            <button class="wallet-ops-btn list-btn" data-token="${t.name}">List</button>
+          </td>
+        </tr>
+      `).join('');
+
+      // 为List按钮添加点击事件
+      tbody.querySelectorAll('.list-btn').forEach(btn => {
+        btn.onclick = function() {
+          const tokenName = this.getAttribute('data-token');
+          const tokenIndex = TOKENS.findIndex(t => t.name === tokenName);
+          if(tokenIndex !== -1) {
+            showMarketDetail(tokenIndex);
+          }
+        };
+      });
+    }
+    navWallet.onclick = function(e) {
+      e.preventDefault();
+      navWallet.classList.add('active');
+      navHome.classList.remove('active');
+      navMarket.classList.remove('active');
+      homePage.style.display = 'none';
+      marketPage.style.display = 'none';
+      marketDetailPage.style.display = 'none';
+      walletPage.style.display = '';
+      fakeBTCBalance = (Math.random() * 0.1 + 0.01);
+      renderWalletOverview();
+      renderWalletAssets();
+    };
+    </script>
+</body>
+</html> 
